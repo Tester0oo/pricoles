@@ -15,17 +15,10 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Setup MSVC
-      uses: ilammy/msvc-dev-cmd@v1
-      
     - name: Install OBS Studio SDK
       run: |
         curl -L -o obs-studio.zip https://github.com/obsproject/obs-studio/releases/download/32.1.0/OBS-Studio-32.1.0-Windows-x64.zip
         7z x obs-studio.zip -oobs-studio
-        
-    - name: Setup CMake
-      run: |
-        cmake --version
         
     - name: Build Plugin
       run: |
@@ -37,6 +30,6 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: sorevnovania
+        name: competition-overlay
         path: Release/*.dll
         if-no-files-found: error
