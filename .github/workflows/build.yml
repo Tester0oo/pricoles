@@ -1,0 +1,42 @@
+name: Build OBS Plugin
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      
+    - name: Install OBS Studio SDK
+      run: |
+        curl -L -o obs-studio.zip https://github.com/obsproject/obs-studio/releases/download/29.1.3/obs-studio-29.1.3-win64.zip
+        7z x obs-studio.zip -oobs-studio
+        
+    - name: Setup CMake
+      run: |
+        cmake --version
+        
+    - name: Configure CMake
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DOBS_STUDIO_PATH="obs-studio"
+        
+    - name: Build
+      run: |
+        cmake --build build --config Release
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: obs-competition-overlay
+        path: build/Release/*.dll
