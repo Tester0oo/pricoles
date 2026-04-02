@@ -20,7 +20,7 @@ jobs:
       
     - name: Install OBS Studio SDK
       run: |
-        curl -L -o obs-studio.zip https://github.com/obsproject/obs-studio/releases/download/29.1.3/obs-studio-29.1.3-win64.zip
+        curl -L -o obs-studio.zip https://github.com/obsproject/obs-studio/releases/download/32.1.0/OBS-Studio-32.1.0-Windows-x64.zip
         7z x obs-studio.zip -oobs-studio
         
     - name: Setup CMake

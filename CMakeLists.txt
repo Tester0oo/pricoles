@@ -3,15 +3,22 @@ project(obs-competition-overlay)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Найдем OBS Studio
-find_package(OBS REQUIRED)
+# Путь к OBS Studio SDK
+set(OBS_SDK_PATH "${CMAKE_CURRENT_SOURCE_DIR}/obs-studio")
 
-# Создаем плагин
 add_library(${PROJECT_NAME} SHARED
     src/sorevnovania.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} obs-lib)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    "${OBS_SDK_PATH}/include"
+    "${OBS_SDK_PATH}/include/libobs"
+)
+
+# Попробуем найти библиотеки
+if(EXISTS "${OBS_SDK_PATH}/lib")
+    target_link_directories(${PROJECT_NAME} PRIVATE "${OBS_SDK_PATH}/lib")
+endif()
 
 install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${OBS_PLUGIN_DESTINATION}
