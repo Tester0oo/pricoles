@@ -27,17 +27,16 @@ jobs:
       run: |
         cmake --version
         
-    - name: Configure CMake
+    - name: Build Plugin
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=Release -DOBS_STUDIO_PATH="obs-studio"
-        
-    - name: Build
-      run: |
-        cmake --build build --config Release
+        mkdir build
+        cd build
+        cmake .. -G "Visual Studio 16 2019" -A x64 -DOBS_SDK_PATH="${{ github.workspace }}/obs-studio"
+        cmake --build . --config Release
         
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: obs-competition-overlay
-        path: build/Release/*.dll
+        name: competition-overlay
+        path: Release/*.dll
         if-no-files-found: error

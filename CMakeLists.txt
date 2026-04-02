@@ -13,12 +13,13 @@ add_library(${PROJECT_NAME} SHARED
 target_include_directories(${PROJECT_NAME} PRIVATE
     "${OBS_SDK_PATH}/include"
     "${OBS_SDK_PATH}/include/libobs"
+    "${OBS_SDK_PATH}/include/libos/util"
+    "${OBS_SDK_PATH}/include/libobs/obs-frontend-api"
 )
 
-# Попробуем найти библиотеки
-if(EXISTS "${OBS_SDK_PATH}/lib")
-    target_link_directories(${PROJECT_NAME} PRIVATE "${OBS_SDK_PATH}/lib")
-endif()
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    PREFIX ""
+)
 
 install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${OBS_PLUGIN_DESTINATION}
