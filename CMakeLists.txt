@@ -8,7 +8,7 @@ find_package(OBS REQUIRED)
 
 # Создаем плагин
 add_library(${PROJECT_NAME} SHARED
-    src/competition_overlay.cpp
+    src/sorevnovania.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} obs-lib)
