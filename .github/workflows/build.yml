@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
         
@@ -36,7 +36,8 @@ jobs:
         cmake --build build --config Release
         
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: obs-competition-overlay
         path: build/Release/*.dll
+        if-no-files-found: error
