@@ -15,46 +15,18 @@ jobs:
       with:
         submodules: recursive
         
-    - name: Download OBS SDK
+    - name: Download OBS Studio Source
       shell: powershell
       run: |
-        # Получаем последнюю версию из GitHub API
-        $releases = Invoke-RestMethod -Uri "https://api.github.com/repos/obsproject/obs-studio/releases" -Headers @{'Accept'='application/vnd.github.v3+json'}
-        
-        # Ищем последний релиз с windows SDK
-        $latest = $releases | Where-Object { -not $_.prerelease } | Select-Object -First 1
-        $obs_version = $latest.tag_name -replace 'v', ''
-        
-        Write-Host "Latest OBS version: $obs_version"
-        
-        # Пробуем скачать SDK с разными вариантами
-        $urls = @(
-          "https://github.com/obsproject/obs-studio/releases/download/32.1.1/OBS-Studio-32.1.1-Windows-x64.zip",
-          "https://github.com/obsproject/obs-studio/releases/download/v32.1.1/OBS-Studio-32.1.1-Windows-x64.zip"
-        )
-        
-        $downloaded = $false
-        foreach ($url in $urls) {
-          Write-Host "Trying: $url"
-          try {
-            $ProgressPreference = 'SilentlyContinue'
-            Invoke-WebRequest -Uri $url -OutFile obs-sdk.zip -ErrorAction Stop
-            Write-Host "Downloaded successfully"
-            $downloaded = $true
-            break
-          } catch {
-            Write-Host "Failed: $_"
-          }
-        }
-        
-        if (-not $downloaded) {
-          Write-Error "Could not download OBS SDK from any URL"
-          exit 1
-        }
-        
-        # Распаковываем
-        Expand-Archive -Path obs-sdk.zip -DestinationPath obs-sdk -Force
-        dir obs-sdk
+        $obs_version = "32.1.1"
+        $url = "https://github.com/obsproject/obs-studio/archive/refs/tags/$obs_version.zip"
+    
+        Write-Host "Downloading OBS Studio source..."
+        $ProgressPreference = 'SilentlyContinue'
+        Invoke-WebRequest -Uri $url -OutFile obs-studio.zip
+    
+        Expand-Archive -Path obs-studio.zip -DestinationPath . -Force
+        Rename-Item -Path "obs-studio-$obs_version" -NewName "obs-studio"
         
     - name: Setup OBS SDK Path
       shell: powershell
