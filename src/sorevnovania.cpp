@@ -30,17 +30,31 @@ static void render(void *data, gs_effect_t *effect) {
     std::string text1 = overlay->pair1.name1 + " / " + overlay->pair1.name2 + " | " + overlay->pair1.status;
     std::string text2 = overlay->pair2.name1 + " / " + overlay->pair2.name2 + " | " + overlay->pair2.status;
 
-    // Используем эффект по умолчанию
-    gs_effect_t *default_effect = obs_get_base_effect(OBS_EFFECT_DEFAULT);
-    if (default_effect) {
-        effect = default_effect;
+    // Используем texrender для рендеринга
+    gs_texrender_reset(overlay->texrender);
+    
+    // Начинаем рендеринг в текстуру
+    if (gs_texrender_begin(overlay->texrender, 1920, 1080)) {
+        struct vec4 background;
+        vec4_zero(&background);
+        gs_clear(GS_CLEAR_COLOR, &background, 0.0f, 0);
+        gs_ortho(0.0f, 1920.0f, 0.0f, 1080.0f, -100.0f, 100.0f);
+
+        // Здесь можно добавить рендеринг текста используя obs_source_t
+        // или другие графические примитивы
+        
+        gs_texrender_end(overlay->texrender);
     }
 
-    // Рисуем первый текст в позиции (10, 10)
-    obs_source_draw_text(overlay->source, text1.c_str(), 10, 10, 0xFFFFFFFF, effect);
-    
-    // Рисуем второй текст в позиции (10, 40)
-    obs_source_draw_text(overlay->source, text2.c_str(), 10, 40, 0xFFFFFFFF, effect);
+    // Отображаем результирующую текстуру
+    gs_texture_t *texture = gs_texrender_get_texture(overlay->texrender);
+    if (texture) {
+        struct vec2 scale;
+        vec2_set(&scale, 1.0f, 1.0f);
+        
+        gs_effect_set_texture(effect, gs_effect_get_param_by_name(effect, "image"), texture);
+        gs_draw_sprite(texture, 0, 0, 0);
+    }
 }
 
 // Функция создания источника
@@ -95,7 +109,7 @@ static void update(void *data, obs_data_t *settings) {
 
     if (!overlay || !settings) return;
 
-    const char *str = nullptr;
+    const char *str = NULL;
     
     str = obs_data_get_string(settings, "pair1_name1");
     overlay->pair1.name1 = str ? str : "";
