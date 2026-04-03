@@ -17,8 +17,10 @@ jobs:
         
     - name: Install OBS Studio SDK
       run: |
-        curl -L -o obs-studio.zip https://github.com/obsproject/obs-studio/releases/download/32.1.0/OBS-Studio-32.1.0-Windows-x64.zip
-        7z x obs-studio.zip -oobs-studio
+        curl -L -o obs-studio.zip https://github.com/obsproject/obs-studio/releases/download/32.1.0/obs-studio-32.1.0-win64.zip
+        7z x obs-studio.zip -oobs-studio-temp
+        move obs-studio-temp/* obs-studio
+        rmdir obs-studio-temp
         
     - name: Build Plugin
       run: |
@@ -31,5 +33,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: competition-overlay
-        path: Release/*.dll
+        path: build/Release/*.dll
         if-no-files-found: error
