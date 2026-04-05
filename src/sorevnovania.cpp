@@ -1,4 +1,4 @@
-#include <obs-module.h>
+#include <obs-studio/libobs/obs-module.h>
 #include <util/platform.h>
 #include <string>
 #include <vector>
