@@ -1,5 +1,5 @@
 #include <obs-studio/libobs/obs-module.h>
-#include <util/platform.h>
+#include <obs-studio/libobs/util/platform.h>
 #include <string>
 #include <vector>
 
