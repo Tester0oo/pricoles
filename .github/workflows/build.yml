@@ -13,32 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
         
-    - name: Download OBS Studio Source
-      shell: powershell
-      run: |
-        $obs_version = "32.1.1"
-        $url = "https://github.com/obsproject/obs-studio/archive/refs/tags/$obs_version.zip"
-        
-        Write-Host "Downloading OBS Studio $obs_version source..."
-        $ProgressPreference = 'SilentlyContinue'
-        
-        try {
-          Invoke-WebRequest -Uri $url -OutFile obs-studio.zip -ErrorAction Stop
-          Write-Host "Download successful"
-        } catch {
-          Write-Host "Error downloading: $_"
-          exit 1
-        }
-        
-        Write-Host "Extracting OBS Studio..."
-        Expand-Archive -Path obs-studio.zip -DestinationPath . -Force
-        
-        Write-Host "Renaming folder..."
-        Rename-Item -Path "obs-studio-$obs_version" -NewName "obs-studio" -Force
-        
-        Write-Host "OBS Studio extracted successfully"
-        Get-ChildItem -Path "obs-studio" -Depth 1
-        
     - name: Setup Visual Studio
       uses: microsoft/setup-msbuild@v1.1
       
